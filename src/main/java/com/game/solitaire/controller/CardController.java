@@ -19,7 +19,7 @@ public class CardController {
     }
 
     @MessageMapping("/cards/extra")
-    @SendTo("/topic/cardList")
+    @SendTo("/topic/extraCards")
     public List<Card> sendExtraCards() throws Exception {
         return new GameRoom().getExtraCards();
     }
