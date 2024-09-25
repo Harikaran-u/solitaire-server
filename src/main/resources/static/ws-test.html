@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Card List</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+</head>
+<body>
+<h1>Card List from WebSocket</h1>
+<div id="cardList"></div>
+<script>
+    // Establish WebSocket connection
+    const socket = new SockJS('http://localhost:8080/ws');
+    const stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        // Subscribe to the topic to receive card list
+        stompClient.subscribe('/topic/cardList', function (message) {
+            console.log('Received: ' + message.body);
+            // Display the received cards on the webpage
+            const cardListDiv = document.getElementById('cardList');
+            const cards = JSON.parse(message.body);  // Parse the JSON response
+            cardListDiv.innerHTML = ''; // Clear existing content
+            cards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.textContent = `${card.rank} of ${card.suit}`;  // Adjust as per your Card properties
+                cardListDiv.appendChild(cardElement);
+            });
+        });
+
+        // Send a message to trigger the card list retrieval
+        stompClient.send("/app/cards", {}, {});
+    });
+</script>
+</body>
+</html>
