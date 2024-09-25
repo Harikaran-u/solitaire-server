@@ -44,4 +44,15 @@ public class HelperFunctions {
         return shuffledCards;
     }
 
+    public static List<Card> getExtraCards(){
+        List<Card> newCards = new Deck().getCardsList();
+        List<Card> extraCards = new ArrayList<>();
+        extraCards.addAll(newCards);
+        extraCards.addAll(newCards);
+        extraCards.addAll(newCards);
+        extraCards.addAll(newCards.subList(0, 11));
+        Collections.shuffle(extraCards);
+        return extraCards;
+    }
+
 }
