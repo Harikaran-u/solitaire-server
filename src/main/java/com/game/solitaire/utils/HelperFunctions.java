@@ -37,7 +37,11 @@ public class HelperFunctions {
     public static List<Card> getRandomCards(Integer size){
         List<Card> randomCardList =  new Deck().getCardsList();
         Collections.shuffle(randomCardList);
-        return randomCardList.subList(0, size);
+        List<Card> shuffledCards = new ArrayList<>(randomCardList.subList(0, size));
+        Card lastCard = shuffledCards.get(size - 1);
+        Card modifiedCard = new Card(lastCard.getType(), lastCard.getRank(), lastCard.getCardImgUrl(), true);
+        shuffledCards.set(size - 1, modifiedCard);
+        return shuffledCards;
     }
 
 }

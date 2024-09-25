@@ -19,15 +19,30 @@
         // Subscribe to the topic to receive card list
         stompClient.subscribe('/topic/cardList', function (message) {
             console.log('Received: ' + message.body);
+
             // Display the received cards on the webpage
             const cardListDiv = document.getElementById('cardList');
             const cards = JSON.parse(message.body);  // Parse the JSON response
             cardListDiv.innerHTML = ''; // Clear existing content
-            cards.forEach(card => {
-                const cardElement = document.createElement('div');
-                cardElement.textContent = `${card.rank} of ${card.suit}`;  // Adjust as per your Card properties
-                cardListDiv.appendChild(cardElement);
-            });
+
+            // Loop through the piles (1 to 10)
+            for (let i = 1; i <= 10; i++) {
+                const pileCards = cards[i];  // Get the cards for the current pile
+
+                if (pileCards) { // Check if the pile exists
+                    const pileDiv = document.createElement('div');
+                    pileDiv.innerHTML = `<strong>Pile ${i}:</strong><br>`; // Title for each pile
+
+                    // Loop through each card in the pile
+                    pileCards.forEach(card => {
+                        const cardElement = document.createElement('div');
+                        cardElement.textContent = `Type: ${card.type}, Rank: ${card.rank}, CardImg: ${card.cardImgUrl}, IsFlipped: ${card.isFlipped}`;
+                        pileDiv.appendChild(cardElement);
+                    });
+
+                    cardListDiv.appendChild(pileDiv); // Add the pile to the main div
+                }
+            }
         });
 
         // Send a message to trigger the card list retrieval
