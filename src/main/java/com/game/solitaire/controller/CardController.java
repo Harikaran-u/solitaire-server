@@ -12,10 +12,15 @@ import java.util.List;
 @Controller
 public class CardController {
 
-    @MessageMapping("/cards")
+    @MessageMapping("/cards/piles")
     @SendTo("/topic/cardList")
     public HashMap<Integer, List<Card>> sendCardList() throws Exception {
         return new GameRoom().getPilesCardList();
     }
 
+    @MessageMapping("/cards/extra")
+    @SendTo("/topic/cardList")
+    public List<Card> sendExtraCards() throws Exception {
+        return new GameRoom().getExtraCards();
+    }
 }

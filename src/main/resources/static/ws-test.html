@@ -7,7 +7,21 @@
 </head>
 <body>
 <h1>Card List from WebSocket</h1>
+
+<!-- Main Card List Display -->
+<h2>Main Card List</h2>
 <div id="cardList"></div>
+
+<!-- Button to retrieve extra cards -->
+<h2>Retrieve Extra Cards</h2>
+<button id="retrieveExtraCards">Get Extra Cards</button>
+
+<!-- Extra Cards Display -->
+<h2>Extra Cards</h2>
+<div id="extraCardList"></div>
+<!-- Display count of extra cards -->
+<div id="extraCardCount"></div>
+
 <script>
     // Establish WebSocket connection
     const socket = new SockJS('http://localhost:8080/ws');
@@ -16,9 +30,9 @@
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-        // Subscribe to the topic to receive card list
+        // Subscribe to the topic to receive the main card list
         stompClient.subscribe('/topic/cardList', function (message) {
-            console.log('Received: ' + message.body);
+            console.log('Received main card list: ' + message.body);
 
             // Display the received cards on the webpage
             const cardListDiv = document.getElementById('cardList');
@@ -45,8 +59,31 @@
             }
         });
 
-        // Send a message to trigger the card list retrieval
-        stompClient.send("/app/cards", {}, {});
+        // Send a message to trigger the main card list retrieval
+        stompClient.send("/app/cards/piles", {}, {});
+
+        // Handle button click to retrieve extra cards
+        document.getElementById('retrieveExtraCards').onclick = function() {
+            stompClient.send("/app/cards/extra", {}, {}); // Send message to retrieve extra cards
+        };
+
+        // Subscribe to receive extra cards
+        stompClient.subscribe('/topic/cardList', function (message) {
+            const extraCardListDiv = document.getElementById('extraCardList');
+            const extraCards = JSON.parse(message.body);  // Parse the JSON response
+            extraCardListDiv.innerHTML = ''; // Clear existing content
+
+            // Display count of extra cards
+            const extraCardCountDiv = document.getElementById('extraCardCount');
+            extraCardCountDiv.innerHTML = `Count of Extra Cards: ${extraCards.length}`; // Display count
+
+            // Loop through the extra cards
+            extraCards.forEach(card => {
+                const cardElement = document.createElement('div');
+                cardElement.textContent = `Type: ${card.type}, Rank: ${card.rank}, CardImg: ${card.cardImgUrl}, IsFlipped: ${card.isFlipped}`;
+                extraCardListDiv.appendChild(cardElement); // Add the extra card to the display
+            });
+        });
     });
 </script>
 </body>
