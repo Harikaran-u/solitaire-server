@@ -12,6 +12,8 @@ import java.util.List;
 @Controller
 public class CardController {
 
+
+
     @MessageMapping("/cards/piles")
     @SendTo("/topic/cardList")
     public HashMap<Integer, List<Card>> sendCardList() throws Exception {
@@ -22,5 +24,13 @@ public class CardController {
     @SendTo("/topic/extraCards")
     public List<Card> sendExtraCards() throws Exception {
         return new GameRoom().getExtraCards();
+    }
+
+    @MessageMapping("/cards/updated")
+    @SendTo("/topic/updatedCards")
+    public HashMap<Integer, List<Card>> getUpdatedCards(HashMap<Integer, List<Card>> updatedPiles) throws Exception {
+        GameRoom newGameRoom = new GameRoom();
+        newGameRoom.setPilesCardList(updatedPiles);
+        return newGameRoom.getPilesCardList();
     }
 }
