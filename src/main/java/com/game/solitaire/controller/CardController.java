@@ -1,6 +1,5 @@
 package com.game.solitaire.controller;
 import com.game.solitaire.model.Card;
-import com.game.solitaire.model.Deck;
 import com.game.solitaire.model.GameRoom;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -11,8 +10,6 @@ import java.util.List;
 
 @Controller
 public class CardController {
-
-
 
     @MessageMapping("/cards/piles")
     @SendTo("/topic/cardList")
