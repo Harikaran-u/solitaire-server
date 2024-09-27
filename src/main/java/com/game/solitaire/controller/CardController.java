@@ -25,9 +25,9 @@ public class CardController {
 
     @MessageMapping("/cards/updated")
     @SendTo("/topic/updatedCards")
-    public HashMap<Integer, List<Card>> getUpdatedCards(HashMap<Integer, List<Card>> updatedPiles) throws Exception {
+    public String getUpdatedCards(HashMap<Integer, List<Card>> updatedPiles) throws Exception {
         GameRoom newGameRoom = new GameRoom();
         newGameRoom.setPilesCardList(updatedPiles);
-        return newGameRoom.getPilesCardList();
+        return "Updated successfully...";
     }
 }

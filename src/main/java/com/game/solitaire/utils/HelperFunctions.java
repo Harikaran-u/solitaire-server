@@ -51,6 +51,7 @@ public class HelperFunctions {
         extraCards.addAll(newCards);
         extraCards.addAll(newCards);
         extraCards.addAll(newCards.subList(0, 11));
+        extraCards.forEach((eachCard) -> eachCard.setIsFlipped(true));
         Collections.shuffle(extraCards);
         return extraCards;
     }
